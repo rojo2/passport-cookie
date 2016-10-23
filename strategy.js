@@ -66,7 +66,7 @@ Strategy.prototype.authenticate = function(req) {
   }
 
   if (!token) {
-    return this.fail(400);
+    return this.fail(401);
   }
 
   var self = this;
