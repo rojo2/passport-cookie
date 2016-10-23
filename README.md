@@ -1,6 +1,7 @@
 # passport-cookie
 
 [![Build Status](https://travis-ci.org/rojo2/passport-cookie.svg?branch=master)](https://travis-ci.org/rojo2/passport-cookie)
+[![Coverage Status](https://coveralls.io/repos/github/rojo2/passport-cookie/badge.svg?branch=master)](https://coveralls.io/github/rojo2/passport-cookie?branch=master)
 
 Cookie authentication strategy for [Passport](http://passportjs.org)
 

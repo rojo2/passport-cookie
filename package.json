@@ -1,6 +1,6 @@
 {
   "name": "passport-cookie",
-  "version": "1.1.0",
+  "version": "1.0.1",
   "keywords": [
     "passport",
     "auth",
@@ -22,6 +22,7 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
+    "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm ./coverage/lcov.info",
     "cover": "istanbul cover node_modules/.bin/_mocha -- -- -u exports --report html test/**/*",
     "test": "mocha"
   },
@@ -30,8 +31,10 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-passport-strategy": "^1.0.0",
+    "coveralls": "^2.11.14",
     "istanbul": "^0.4.5",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "mocha-lcov-reporter": "^1.2.0"
   },
   "dependencies": {
     "passport-strategy": "^1.0.0"
