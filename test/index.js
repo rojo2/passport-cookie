@@ -11,7 +11,7 @@ describe("Strategy", function() {
     expect(strategy.name).to.equal("cookie");
   });
 
-  it("should throw if constructed without a verify callback", function() {    
+  it("should throw if constructed without a verify callback", function() {
     expect(function() {
       new Strategy();
     }).to.throw(TypeError, "CookieStrategy requires a verify callback");
@@ -50,7 +50,7 @@ describe("Strategy", function() {
 
     chai.passport.use(strategy)
     .fail(function(err) {
-      expect(err).to.equal(400);
+      expect(err).to.equal(401);
       return done();
     })
     .success(function() {
@@ -62,7 +62,7 @@ describe("Strategy", function() {
       };
     }).authenticate();
   });
-  
+
   it("should call the verify callback and call fail because the user is not found", function(done) {
     var strategy = new Strategy(function(token, next) {
       expect(token).to.equal("abc");
@@ -82,7 +82,7 @@ describe("Strategy", function() {
     }).authenticate();
 
   });
-  
+
   it("should call the verify callback and call next with an error", function(done) {
     var strategy = new Strategy(function(token, next) {
       expect(token).to.equal("abc");
@@ -103,7 +103,7 @@ describe("Strategy", function() {
       };
     }).authenticate();
   });
-  
+
   it("should call the verify callback and call next with success", function(done) {
     var strategy = new Strategy(function(token, next) {
       expect(token).to.equal("abc");
