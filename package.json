@@ -1,0 +1,39 @@
+{
+  "name": "passport-cookie",
+  "version": "1.0.0",
+  "keywords": [
+    "passport",
+    "auth",
+    "authn",
+    "authentication",
+    "token",
+    "cookie"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rojo2/passport-cookie.git"
+  },
+  "bugs": {
+    "url": "http://github.com/rojo2.com/passport-cookie/issues"
+  },
+  "description": "Cookie authentication strategy for Passport",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "cover": "istanbul cover node_modules/.bin/_mocha -- -- -u exports --report html test/**/*",
+    "test": "mocha"
+  },
+  "author": "ROJO 2 <hola@rojo2.com> (http://rojo2.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-passport-strategy": "^1.0.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2"
+  },
+  "dependencies": {
+    "passport-strategy": "^1.0.0"
+  }
+}
