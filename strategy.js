@@ -10,6 +10,7 @@ var util = require("util");
  * Options:
  *
  *   - `cookieName`  Cookie name (defaults to "token")
+ *   - `passReqToCallback`  when `true`, `req` is the first argument to the verify callback (default: `false`)
  *
  * Examples:
  *
@@ -42,6 +43,7 @@ function Strategy(options, verify) {
   this.name = "cookie";
   this._cookieName = options.cookieName || "token";
   this._verify = verify;
+  this._passReqToCallback = options.passReqToCallback;
 }
 
 /**
@@ -77,8 +79,16 @@ Strategy.prototype.authenticate = function(req) {
     }
     self.success(user);
   }
-  this._verify(token, verified);
 
+  try {
+    if (self._passReqToCallback) {
+      this._verify(req, token, verified);
+    } else {
+      this._verify(token,verified);
+    }
+  } catch (ex) {
+    return self.error(ex);
+  }
 };
 
 /**

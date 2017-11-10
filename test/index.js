@@ -126,4 +126,31 @@ describe("Strategy", function() {
     }).authenticate();
   });
 
+  it("should pass request to verify callback", function(done) {
+    var strategy = new Strategy({passReqToCallback: true}, function(req, token, next) {
+      expect(req.body.username).to.equal('enricofermi');
+      expect(req.body.password).to.equal('fermion');
+      expect(token).to.equal("abc");
+      return next(null, {
+        id: "userid"
+      });
+    });
+
+    chai.passport.use(strategy)
+    .error(function(err) {
+      return done(new Error("It should not call this"));
+    })
+    .success(function() {
+      return done();
+    })
+    .req(function(req) {
+      req.cookies = {
+        token: "abc"
+      };
+      req.body = {};
+      req.body.username = 'enricofermi';
+      req.body.password = 'fermion';
+    }).authenticate();
+  });
+
 });
