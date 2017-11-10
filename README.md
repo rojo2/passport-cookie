@@ -58,6 +58,11 @@ application:
 
 Thanks to [Jared Hanson](https://github.com/jaredhanson) for his great [Passport](http://passportjs.org)
 
+## Contributors
+
+- [AzazelN28](https://github.com/azazeln28)
+- [Jershon](https://github.com/jylopez)
+
 ## License
 
 [The MIT License](http://opensource.org/licenses/MIT)
