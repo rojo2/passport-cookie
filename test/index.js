@@ -34,6 +34,11 @@ describe("Strategy", function() {
     }).to.throw(TypeError, "Maybe you forgot to use cookie-parser?");
   });
 
+  it("should create a strategy with signed cookies", function () {
+    var strategy = new Strategy({ signed: true }, function () {});
+    expect(strategy._signed).to.equal(true);
+  });
+
   it("should call the verify callback with the token value", function(done) {
     var strategy = new Strategy(function(token) {
       expect(token).to.equal("abc");
@@ -83,6 +88,26 @@ describe("Strategy", function() {
 
   });
 
+  it("should call the verify callback and call fail because the user is not found with signed cookies", function(done) {
+    var strategy = new Strategy({ signed: true }, function(token, next) {
+      expect(token).to.equal("abc");
+      return next(null, false);
+    });
+
+    chai.passport.use(strategy)
+    .fail(function(err) {
+      expect(err).to.equal(401);
+      return done();
+    })
+    .success(function() {
+      return done(new Error("It should not call this"));
+    })
+    .req(function(req) {
+      req.signedCookies = { token: "abc" };
+    }).authenticate();
+
+  });
+
   it("should call the verify callback and call next with an error", function(done) {
     var strategy = new Strategy(function(token, next) {
       expect(token).to.equal("abc");
@@ -99,6 +124,27 @@ describe("Strategy", function() {
     })
     .req(function(req) {
       req.cookies = {
+        token: "abc"
+      };
+    }).authenticate();
+  });
+
+  it("should call the verify callback and call next with an error with signed cookies", function(done) {
+    var strategy = new Strategy({ signed: true }, function(token, next) {
+      expect(token).to.equal("abc");
+      return next(new Error("Failed"));
+    });
+
+    chai.passport.use(strategy)
+    .error(function(err) {
+      expect(err.message).to.equal("Failed");
+      return done();
+    })
+    .success(function() {
+      return done(new Error("It should not call this"));
+    })
+    .req(function(req) {
+      req.signedCookies = {
         token: "abc"
       };
     }).authenticate();
@@ -126,6 +172,28 @@ describe("Strategy", function() {
     }).authenticate();
   });
 
+  it("should call the verify callback and call next with success with signed cookies", function(done) {
+    var strategy = new Strategy({ signed: true }, function(token, next) {
+      expect(token).to.equal("abc");
+      return next(null, {
+        id: "userid"
+      });
+    });
+
+    chai.passport.use(strategy)
+    .error(function(err) {
+      return done(new Error("It should not call this"));
+    })
+    .success(function() {
+      return done();
+    })
+    .req(function(req) {
+      req.signedCookies = {
+        token: "abc"
+      };
+    }).authenticate();
+  });
+
   it("should pass request to verify callback", function(done) {
     var strategy = new Strategy({passReqToCallback: true}, function(req, token, next) {
       expect(req.body.username).to.equal('enricofermi');
@@ -145,6 +213,33 @@ describe("Strategy", function() {
     })
     .req(function(req) {
       req.cookies = {
+        token: "abc"
+      };
+      req.body = {};
+      req.body.username = 'enricofermi';
+      req.body.password = 'fermion';
+    }).authenticate();
+  });
+
+  it("should pass request to verify callback with signed cookies", function(done) {
+    var strategy = new Strategy({passReqToCallback: true, signed: true}, function(req, token, next) {
+      expect(req.body.username).to.equal('enricofermi');
+      expect(req.body.password).to.equal('fermion');
+      expect(token).to.equal("abc");
+      return next(null, {
+        id: "userid"
+      });
+    });
+
+    chai.passport.use(strategy)
+    .error(function(err) {
+      return done(new Error("It should not call this"));
+    })
+    .success(function() {
+      return done();
+    })
+    .req(function(req) {
+      req.signedCookies = {
         token: "abc"
       };
       req.body = {};
