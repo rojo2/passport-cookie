@@ -10,6 +10,7 @@ var util = require("util");
  * Options:
  *
  *   - `cookieName`  Cookie name (defaults to "token")
+ *   - `signed` Are the cookie signed? (defaults to false)
  *   - `passReqToCallback`  when `true`, `req` is the first argument to the verify callback (default: `false`)
  *
  * Examples:
@@ -42,6 +43,7 @@ function Strategy(options, verify) {
   passport.Strategy.call(this);
   this.name = "cookie";
   this._cookieName = options.cookieName || "token";
+  this._signed = options.signed || false;
   this._verify = verify;
   this._passReqToCallback = options.passReqToCallback;
 }
@@ -58,13 +60,19 @@ util.inherits(Strategy, passport.Strategy);
  * @api protected
  */
 Strategy.prototype.authenticate = function(req) {
-  if (!req.cookies) {
+  if ((!this._signed && !req.cookies) || (this._signed && !req.signedCookies)) {
     throw new TypeError("Maybe you forgot to use cookie-parser?");
   }
 
   var token;
-  if (req.cookies[this._cookieName]) {
-    token = req.cookies[this._cookieName];
+  if (this._signed) {
+    if (req.signedCookies[this._cookieName]) {
+      token = req.signedCookies[this._cookieName];
+    }
+  } else {
+    if (req.cookies[this._cookieName]) {
+      token = req.cookies[this._cookieName];
+    }
   }
 
   if (!token) {
