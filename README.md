@@ -14,7 +14,9 @@ middleware, including [Express](http://expressjs.com/)..
 
 ## Install
 
-    $ npm install passport-cookie
+```sh
+$ npm install passport-cookie
+```
 
 ## Usage
 
@@ -24,35 +26,61 @@ The cookie authentication strategy authenticates users using a cookie. The
 strategy requires a verify callback, which accepts that credential and calls
 done providing a user.
 
-    passport.use(new CookieStrategy(
-      function(token, done) {
-        User.findByToken({ token: token }, function(err, user) {
-          if (err) { return done(err); }
-          if (!user) { return done(null, false); }
-          return done(null, user);
-        });
-      }
-    ));
+```javascript
+passport.use(new CookieStrategy(
+  function(token, done) {
+    User.findByToken({ token: token }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
+```
+
+You can pass the following options to the `CookieStrategy`:
+
+    - `cookieName`: Cookie name (defaults to "token")
+    - `signed`: Are the cookie signed? (defaults to false)
+    - `passReqToCallback`: when `true`, `req` is the first argument to the verify callback (default: `false`)
+
+```javascript
+passport.use(new CookieStrategy({
+  cookieName: 'auth',
+  signed: true,
+  passReqToCallback: true
+}, function(req, token, done) {
+  User.findByToken({ token: token }, function(err, user) {
+    if (err) { return done(err); }
+    if (!user) { return done(null, false); }
+    return done(null, user);
+  });
+})
+```
 
 #### Authenticate Requests
 
-Use passport.authenticate(), specifying the 'cookie' strategy, to authenticate
+Use `passport.authenticate()`, specifying the 'cookie' strategy, to authenticate
 requests. Requests containing cookies do not require session support, so the
-session option can be set to false.
+session option can be set to `false`.
 
 For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
-    app.get("/profile",
-      passport.authenticate("cookie", { session: false }),
-      function(req, res) {
-        res.json(req.user);
-      });
+```javascript
+app.get("/profile",
+  passport.authenticate("cookie", { session: false }),
+  function(req, res) {
+    res.json(req.user);
+  });
+```
 
 ## Tests
 
-    $ npm install
-    $ npm test
+```sh
+$ npm install
+$ npm test
+```
 
 ## Thanks
 
@@ -66,5 +94,9 @@ Thanks to [Jared Hanson](https://github.com/jaredhanson) for his great [Passport
 ## License
 
 [The MIT License](http://opensource.org/licenses/MIT)
+
+## Donate
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VL264WAE64MLQ&source=url)
 
 Made with ❤ by ROJO 2 (http://rojo2.com)
