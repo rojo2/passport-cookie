@@ -80,12 +80,20 @@ Strategy.prototype.authenticate = function(req) {
   }
 
   var self = this;
-  function verified(err, user) {
+  function verified(err, user, info) {
     if (err) { return self.error(err); }
     if (!user) {
+      if (typeof info == 'string') {
+        info = { message: info }
+      }
+      info = info || {};
+
+      if(info.message){
+        return self.fail(info.message, 401);
+      }
       return self.fail(401);
     }
-    self.success(user);
+    self.success(user, info);
   }
 
   try {
