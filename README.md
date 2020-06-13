@@ -90,6 +90,7 @@ Thanks to [Jared Hanson](https://github.com/jaredhanson) for his great [Passport
 
 - [AzazelN28](https://github.com/azazeln28)
 - [Jershon](https://github.com/jylopez)
+- [kai101](https://github.com/kai101)
 
 ## License
 
