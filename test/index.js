@@ -88,6 +88,27 @@ describe("Strategy", function() {
 
   });
 
+  it("should call the verify callback and call fail because the user is not found with info message", function(done) {
+    var strategy = new Strategy(function(token, next) {
+      expect(token).to.equal("abc");
+      return next(null, false, {message: 'user not found'});
+    });
+
+    chai.passport.use(strategy)
+    .fail(function(message, err) {
+      expect(message).to.equal('user not found')
+      expect(err).to.equal(401);
+      return done();
+    })
+    .success(function() {
+      return done(new Error("It should not call this"));
+    })
+    .req(function(req) {
+      req.cookies = { token: "abc" };
+    }).authenticate();
+
+  });
+
   it("should call the verify callback and call fail because the user is not found with signed cookies", function(done) {
     var strategy = new Strategy({ signed: true }, function(token, next) {
       expect(token).to.equal("abc");
@@ -185,6 +206,30 @@ describe("Strategy", function() {
       return done(new Error("It should not call this"));
     })
     .success(function() {
+      return done();
+    })
+    .req(function(req) {
+      req.signedCookies = {
+        token: "abc"
+      };
+    }).authenticate();
+  });
+
+  it("should call the verify callback and call next with success with signed cookies and info", function(done) {
+    var strategy = new Strategy({ signed: true }, function(token, next) {
+      expect(token).to.equal("abc");
+      return next(null, {
+        id: "userid"
+      }, {role: 'user'});
+    });
+
+    chai.passport.use(strategy)
+    .error(function(err) {
+      return done(new Error("It should not call this"));
+    })
+    .success(function(user, info) {
+      expect(user).to.deep.equal({id: 'userid'});
+      expect(info).to.deep.equal({role: 'user'});
       return done();
     })
     .req(function(req) {
